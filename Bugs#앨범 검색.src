@@ -1,6 +1,6 @@
 ﻿#
 # * Mp3tag web source for Bugs / Search by Album
-# v0.2.2 / 180815
+# v0.3 / 180815
 # 
 # * Installation
 # - just copy this script to:
@@ -17,7 +17,7 @@
 # C:\Documents and Settings\*username*\Application Data\Mp3tag\data\sources
 # ----
 #
-[Name]=Bugs - 앨범명 검색
+[Name]=Bugs / 앨범명 검색
 [BasedOn]=https://music.bugs.co.kr
 [IndexUrl]=https://m.bugs.co.kr/search/album?q=%s
 [AlbumUrl]=https://music.bugs.co.kr/album/
@@ -99,7 +99,7 @@ do
 while "<li class=\"__mobileAlbumListlist1234\" >"
 
 [ParserScriptAlbum]=...
-debug "on" "C:\Temp\Bugs\debug_album.htm"
+debug "off" "C:\Temp\Bugs\debug_album.htm"
 # ###################################################################
 # This script parses the albums page for all common information.
 #
