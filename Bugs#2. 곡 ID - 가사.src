@@ -37,7 +37,7 @@
 # -- note: care for last 2 digit! (200324 -> 200324'45')
 
 [ParserScriptAlbum]=...
-debug "on" "C:\Temp\Bugs\debug_album.htm"
+debug "off" "C:\Temp\Bugs\debug_album.htm"
 # ###################################################################
 # This script parses the albums page for all common information.
 #
