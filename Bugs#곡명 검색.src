@@ -17,10 +17,9 @@
 # C:\Documents and Settings\*username*\Application Data\Mp3tag\data\sources
 # ----
 #
-[Name]=Bugs - 곡명 검색 (앨범 정보)
-[BasedOn]=http://music.bugs.co.kr
+[Name]=Bugs - 곡명 검색 (앨범 정보 이용)
+[BasedOn]=https://music.bugs.co.kr
 [IndexUrl]=https://m.bugs.co.kr/search/track?q=%s
-# [AlbumUrl]=https://m.bugs.co.kr/album/
 [AlbumUrl]=https://music.bugs.co.kr/album/
 [WordSeparator]=+
 # [IndexFormat]=%_url%|%_preview%|%Album%|%Artist%|%Title%|%Released%|%Tracks%
@@ -66,10 +65,20 @@ do
     
     Say "|"
     
-    # preview URL (track page)
-    FindLine "class=\"trackLink\">"
-    FindInLine "<a href=\""
-    SayUntil "\""
+    # preview URL using album ID from cover image url
+    FindLine "<img src=\"https://image."
+    FindInLine "album/images/"
+    RegexpReplace "[0-9]+/[0-9]+/" ""
+    FindInLine "album/images/"
+    Say "https://music.bugs.co.kr/album/"
+    SayUntil "."
+    MoveLine -2
+
+    # otherwise,
+    # # preview URL (track page)
+    # FindLine "class=\"trackLink\">"
+    # FindInLine "<a href=\""
+    # SayUntil "\""
     
     Say "|"
     
@@ -130,20 +139,20 @@ FindInLine "<img src=\""
 
 SayUntil "\""
 
-#`# Bugs album artist ID & Album Artist name
-#`FindLine "http://music.bugs.co.kr/artist/"
-#`OutputTo "BugsAlbumArtistId"
-#`FindInLine "artist/"
-#`SayRegexp "[0-9]+" "" "?"
-#`
-#`OutputTo "AlbumArtist" # TODO multiline
-#`# - tidy artist tag
-#`# : add space between opening parentheses
-#`RegexpReplace "(\w)\(" "$1 ("
-#`RegexpReplace "\" >" "\">"
-#`
-#`FindInLine "\">"
-#`SayUntil "</a>"
+# Bugs album artist ID & Album Artist name
+FindLine "music.bugs.co.kr/artist/"
+OutputTo "BugsAlbumArtistId"
+FindInLine "artist/"
+SayRegexp "[0-9]+" "" "?"
+MoveLine +1
+
+OutputTo "AlbumArtist" # TODO multiline
+# - tidy artist tag
+# : add space between opening parentheses
+RegexpReplace "(\w)\(" "$1 (" 1
+RegexpReplace "\" >" "\">" 1
+
+SayUntil "</a>"
 
 #OutputTo "Artist"
 #SayOutput "AlbumArtist"
@@ -254,7 +263,7 @@ Do
   RegexpReplace "\(.+삽입곡\)" ""
   RegexpReplace " \">" "\">"
     
-  OutputTo "TRACKS"
+  OutputTo "tTITLE"
   FindInLine "title=\""
   SayUntil "\""
   Say "|"
@@ -262,10 +271,10 @@ Do
   # track number
   FindLine "<p class=\"trackIndex\">"
   MoveLine +1
-  #OutputTo "Track"
-  #FindInLine "<em>"
-  #SayUntil "</em>"
-  #Say "|"
+  OutputTo "tTrack"
+  FindInLine "<em>"
+  SayUntil "</em>"
+  Say "|"
   
   # is title?
   MoveLine +1
@@ -284,13 +293,17 @@ Do
   # : add space between opening parentheses
   RegexpReplace "(\w)\(" "$1 ("
   
-  OutputTo "Artist"
+  OutputTo "ARTIST"
   FindInLine "\">"
   SayUntil "</a>"
   Say "|"
   
   FindLine "</tr>"
   MoveLine +1
+
+  OutputTo "tracks"
+  Say "|"
+
 While "<tr albumId=\""
 
 # -- comment --
@@ -298,6 +311,16 @@ FindLine "<section class=\"sectionPadding contents albumDesc\">"
 FindLine "<p id=\"albumContents\""
 MoveLine +1
 OutputTo "ALBUMDESCRIPTION"
-RegexpReplace "<br/>" "\n"
+# NOTE CR+LF, not just LF, it's Windows...!
+RegexpReplace "<br/>" "\r\n"
 RegexpReplace "</?\w+>" ""
 SayRest
+
+# TODO don't know, but the order is important
+OutputTo "TITLE"
+SayOutput "tTITLE"
+OutputTo "track"
+SayOutput "ttrack"
+
+set "tTITLE"
+set "ttrack"

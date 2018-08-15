@@ -18,12 +18,10 @@
 # ----
 #
 [Name]=Bugs - 앨범명 검색
-[BasedOn]=http://music.bugs.co.kr
+[BasedOn]=https://music.bugs.co.kr
 [IndexUrl]=https://m.bugs.co.kr/search/album?q=%s
-# [AlbumUrl]=https://m.bugs.co.kr/album/
 [AlbumUrl]=https://music.bugs.co.kr/album/
 [WordSeparator]=+
-# [IndexFormat]=%_url%|%_preview%|%Album%|%Artist%|%Title%|%Released%|%Tracks%
 [IndexFormat]=%_url%|%_preview%|%앨범%|%아티스트%|%발매일%
 [SearchBy]=%album%
 [Encoding]=url-utf-8
@@ -138,20 +136,20 @@ FindInLine "<img src=\""
 
 SayUntil "\""
 
-#`# Bugs album artist ID & Album Artist name
-#`FindLine "http://music.bugs.co.kr/artist/"
-#`OutputTo "BugsAlbumArtistId"
-#`FindInLine "artist/"
-#`SayRegexp "[0-9]+" "" "?"
-#`
-#`OutputTo "AlbumArtist" # TODO multiline
-#`# - tidy artist tag
-#`# : add space between opening parentheses
-#`RegexpReplace "(\w)\(" "$1 ("
-#`RegexpReplace "\" >" "\">"
-#`
-#`FindInLine "\">"
-#`SayUntil "</a>"
+# Bugs album artist ID & Album Artist name
+FindLine "music.bugs.co.kr/artist/"
+OutputTo "BugsAlbumArtistId"
+FindInLine "artist/"
+SayRegexp "[0-9]+" "" "?"
+MoveLine +1
+
+OutputTo "AlbumArtist" # TODO multiline
+# - tidy artist tag
+# : add space between opening parentheses
+RegexpReplace "(\w)\(" "$1 (" 1
+RegexpReplace "\" >" "\">" 1
+
+SayUntil "</a>"
 
 #OutputTo "Artist"
 #SayOutput "AlbumArtist"
@@ -262,7 +260,7 @@ Do
   RegexpReplace "\(.+삽입곡\)" ""
   RegexpReplace " \">" "\">"
     
-  OutputTo "TRACKS"
+  OutputTo "tTITLE"
   FindInLine "title=\""
   SayUntil "\""
   Say "|"
@@ -270,10 +268,10 @@ Do
   # track number
   FindLine "<p class=\"trackIndex\">"
   MoveLine +1
-  #OutputTo "Track"
-  #FindInLine "<em>"
-  #SayUntil "</em>"
-  #Say "|"
+  OutputTo "tTrack"
+  FindInLine "<em>"
+  SayUntil "</em>"
+  Say "|"
   
   # is title?
   MoveLine +1
@@ -292,13 +290,17 @@ Do
   # : add space between opening parentheses
   RegexpReplace "(\w)\(" "$1 ("
   
-  OutputTo "Artist"
+  OutputTo "ARTIST"
   FindInLine "\">"
   SayUntil "</a>"
   Say "|"
   
   FindLine "</tr>"
   MoveLine +1
+
+  OutputTo "tracks"
+  Say "|"
+
 While "<tr albumId=\""
 
 # -- comment --
@@ -306,6 +308,16 @@ FindLine "<section class=\"sectionPadding contents albumDesc\">"
 FindLine "<p id=\"albumContents\""
 MoveLine +1
 OutputTo "ALBUMDESCRIPTION"
-RegexpReplace "<br/>" "\n"
+# NOTE CR+LF, not just LF, it's Windows...!
+RegexpReplace "<br/>" "\r\n"
 RegexpReplace "</?\w+>" ""
 SayRest
+
+# TODO don't know, but the order is important
+OutputTo "TITLE"
+SayOutput "tTITLE"
+OutputTo "track"
+SayOutput "ttrack"
+
+set "tTITLE"
+set "ttrack"
