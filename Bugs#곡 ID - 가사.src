@@ -1,0 +1,173 @@
+﻿#
+# * Mp3tag web source for Bugs / Fetch a lyric from found track ID
+# v0.3 / 180815
+# 
+# * Installation
+# - just copy this script to:
+# %appdata%\Mp3tag\data\sources\
+# - NOTE '#' in filename makes submenu!
+# 
+# ---- Original by...
+# Mp3tag parsing for Melon.com
+#
+# Created by Hyosang Park http://hyosang.kr
+# Last modified 2016.11.02
+#
+# Save it in your Mp3tag data directory, i.e.
+# C:\Documents and Settings\*username*\Application Data\Mp3tag\data\sources
+# ----
+#
+[Name]=Bugs / 곡 ID - 가사
+[BasedOn]=https://music.bugs.co.kr
+[AlbumUrl]=https://music.bugs.co.kr/track/
+[WordSeparator]=+
+[SearchBy]=%BugsTrackId%
+[Encoding]=utf-8
+
+# TODO UserAgent
+# ref: https://community.mp3tag.de/t/cant-get-full-browser-html-source-for-imdb-titles/41140/4
+# default: "Mozilla/5.0 (compatible)", if enabled below: "Mp3tag/<version>"
+# [UserAgent]=1
+
+# ### Track URL example ###
+# "Dear You" by Lovelyz
+# TrackUrl: https://music.bugs.co.kr/track/30233396
+# CoverUrl: https://image.bugsm.co.kr/album/images/<size>/200324/20032445.jpg
+# -- size: 200, 500, 1000, original
+# -- note: care for last 2 digit! (200324 -> 200324'45')
+
+[ParserScriptAlbum]=...
+debug "on" "C:\Temp\Bugs\debug_album.htm"
+# ###################################################################
+# This script parses the albums page for all common information.
+#
+# The current output variable is set via the outputto command
+# All these fields are used by the confirm online information dialog
+# ###################################################################
+
+# ## TEST -- BugsTrackID --
+FindLine "<meta property=\"og:url\" content=\""
+# OutputTo "BugsTrackId"
+# FindInLine "track/"
+# SayUntil "\"/>"
+# 
+# # optional go to track info section
+FindLine "<article id=\"container\" class=\"mnMusic mnTrack"
+# 
+# # TEST -- track title --
+FindLine "<header class=\"sectionPadding pgTitle"
+# OutputTo "tTITLE"
+# FindLine "<h1>"
+# MoveLine +1
+# Unspace
+# SayRest
+# 
+# # TEST -- cover URL --
+FindLine "<div class=\"photos\">"
+# FindLine "<img src=\""
+# OutputTo "CoverURL"
+# 
+# # TODO change cover image size
+# RegexpReplace "(album/images/)(\d+)" "$1@1000"
+# RegexpReplace "@" ""
+# 
+# FindInLine "<img src=\""
+# 
+# SayUntil "\""
+
+## == information block ==
+
+# # TEST -- track artist & ID --
+FindLine "music.bugs.co.kr/artist/"
+# OutputTo "BugsArtistId"
+# FindInLine "artist/"
+# SayRegexp "[0-9]+" "" "?"
+# MoveLine +1
+# 
+# OutputTo "ARTIST" # TODO multiline?
+# # - tidy artist tag
+# # : add space between opening parentheses
+# RegexpReplace "(\w)\(" "$1 (" 1
+# RegexpReplace "\" >" "\">" 1
+# 
+# SayUntil "</a>"
+ 
+# -- 'mark' if participants information exists --
+# FindLine "<th scope=\"row\">참여 정보</th>" 1 1
+# Unspace
+# if "<th scope=\"row\">참여 정보</th>"
+#     # TODO must wrap a value even if it is a integer number
+#     Set "tParts" "1"
+# Else
+#     Set "tParts" "0"
+# EndIf
+# ==> give up for now, because 'if' stops script when target string not found, even if I placed 'else' block
+
+# # TEST -- album & ID --
+FindLine "music.bugs.co.kr/album/"
+# OutputTo "BugsAlbumId"
+# FindInLine "album/"
+# SayRegexp "[0-9]+" "" "?"
+# 
+# OutputTo "ALBUM" # TODO multiline?
+# # - tidy album tag
+# # : add space between opening parentheses
+# RegexpReplace "(\w)\(" "$1 (" 1
+# # : ...?
+# RegexpReplace "\" >" "\">" 1
+# FindInLine "\">"
+# SayUntil "</a>"
+
+# -- track length --
+FindLine "<td><time datetime=\""
+OutputTo "_LENGTH"
+FindInLine "<time datetime=\""
+SayUntil "\">"
+
+## == information block ==
+# OutputTo "tParts"
+# IfOutput "tParts"
+# 
+# Set "Parts" "Yay"
+# 
+# Else
+# 
+# Unspace
+# 
+# Endif
+
+## == main block ==
+
+# -- lyric (unsynced) --
+FindLine "<div class=\"lyricsContainer\">"
+FindLine "<p><xmp>"
+OutputTo "UNSYNCEDLYRICS"
+# NOTE CR+LF, not just LF, it's Windows...!
+RegexpReplace "<br/>" "\r\n"
+RegexpReplace "</?\w+>" ""
+SayUntilML "</xmp></p>"
+# TODO can't change flag "eng||" placed automatically at front
+
+FindLine "<div class=\"reference\">" 1 1
+FindLine "<cite class=\"writer\">" 1 1
+Unspace
+If "<cite class=\"writer\">"
+  Saynewline
+  Saynewline
+  Say "* 등록: "
+  FindInLine "writer\">"
+  SayUntil "</cite>"
+Endif
+
+# # XXX do not place "TRACKS" tag
+# OutputTo "TRACKS"
+# Say "|"
+
+# # tidy output and print 'unreasoned should print at the end of' tags
+# OutputTo "TITLE"
+# SayOutput "tTITLE"
+# 
+
+# unset temp variables
+Set "tTITLE"
+Set "tParts"
