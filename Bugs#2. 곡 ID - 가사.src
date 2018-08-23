@@ -91,17 +91,20 @@ FindLine "music.bugs.co.kr/artist/"
 # RegexpReplace "\" >" "\">" 1
 # 
 # SayUntil "</a>"
- 
+
+
 # -- 'mark' if participants information exists --
-# FindLine "<th scope=\"row\">참여 정보</th>" 1 1
-# Unspace
-# if "<th scope=\"row\">참여 정보</th>"
-#     # TODO must wrap a value even if it is a integer number
-#     Set "tParts" "1"
-# Else
-#     Set "tParts" "0"
-# EndIf
-# ==> give up for now, because 'if' stops script when target string not found, even if I placed 'else' block
+FindLine "<th scope=\"row\">참여 정보</th>" 1 1
+Unspace
+if "<th scope=\"row\">참여 정보</th>"
+    # NOTE must wrap a value even if it is a integer number
+    Set "tParts" "FOUND"
+else
+    GotoLine 1
+    FindLine "<article id=\"container\" class=\"mnMusic mnTrack"
+endif
+# NOTE 'endif' must be in lower case! ref: https://community.mp3tag.de/t/script-stops-when-if-branch-on-negativ-condition/13581/5
+
 
 # # TEST -- album & ID --
 FindLine "music.bugs.co.kr/album/"
@@ -118,23 +121,170 @@ FindLine "music.bugs.co.kr/album/"
 # FindInLine "\">"
 # SayUntil "</a>"
 
+
 # -- track length --
 FindLine "<td><time datetime=\""
 OutputTo "_LENGTH"
 FindInLine "<time datetime=\""
 SayUntil "\">"
 
+
 ## == information block ==
-# OutputTo "tParts"
-# IfOutput "tParts"
-# 
-# Set "Parts" "Yay"
-# 
-# Else
-# 
-# Unspace
-# 
-# Endif
+ifoutput "tParts"
+
+# Set "Parts" "Yay"  # TEST
+
+# goto participication block
+FindLine "<aside id=\"participatingArtists\""
+
+# VOCAL
+FindLine "<th scope=\"row\">보컬</th>" 1 1
+Unspace
+if "<th scope=\"row\">보컬</th>"
+    MoveLine +2
+    do
+        # fetch artist ID and Name
+        # - ID
+        OutputTo "BugsVocalId"
+        ifoutput "BugsVocalId"
+            Say ";"
+        endif
+        FindInLine "artist/"
+        SayRegexp "[0-9]+" "" "?"
+
+        # - name
+        OutputTo "Vocal"
+        ifoutput "Vocal"
+            Say ", "
+        endif
+        # - tidy tag
+        # : add space between opening parentheses
+        RegexpReplace "(\w)\(" "$1 (" 1
+        RegexpReplace "\" >" "\">" 1
+        FindInLine ">"
+        SayUntil "</a>"
+
+        MoveLine +2
+        Unspace
+    while "<a	href=\"https://music.bugs.co.kr/"
+endif
+
+# return to participication block
+GotoLine 1
+FindLine "<aside id=\"participatingArtists\""
+
+
+# 작곡
+FindLine "<th scope=\"row\">작곡</th>" 1 1
+Unspace
+if "<th scope=\"row\">작곡</th>"
+    MoveLine +2
+    do
+        # fetch artist ID and Name
+        # - ID
+        OutputTo "BugsComposerId"
+        ifoutput "BugsComposerId"
+            Say ";"
+        endif
+        FindInLine "artist/"
+        SayRegexp "[0-9]+" "" "?"
+
+        # - name
+        OutputTo "COMPOSER"
+        ifoutput "COMPOSER"
+            Say ", "
+        endif
+        # - tidy tag
+        # : add space between opening parentheses
+        RegexpReplace "(\w)\(" "$1 (" 1
+        RegexpReplace "\" >" "\">" 1
+        FindInLine ">"
+        SayUntil "</a>"
+
+        MoveLine +2
+        Unspace
+    while "<a	href=\"https://music.bugs.co.kr/"
+endif
+
+# return to participication block
+GotoLine 1
+FindLine "<aside id=\"participatingArtists\""
+
+
+# 작사
+FindLine "<th scope=\"row\">작사</th>" 1 1
+Unspace
+if "<th scope=\"row\">작사</th>"
+    MoveLine +2
+    do
+        # fetch artist ID and Name
+        # - ID
+        OutputTo "BugsLyricistId"
+        ifoutput "BugsLyricistId"
+            Say ";"
+        endif
+        FindInLine "artist/"
+        SayRegexp "[0-9]+" "" "?"
+
+        # - name
+        OutputTo "LYRICIST"
+        ifoutput "LYRICIST"
+            Say ", "
+        endif
+        # - tidy tag
+        # : add space between opening parentheses
+        RegexpReplace "(\w)\(" "$1 (" 1
+        RegexpReplace "\" >" "\">" 1
+        FindInLine ">"
+        SayUntil "</a>"
+
+        MoveLine +2
+        Unspace
+    while "<a	href=\"https://music.bugs.co.kr/"
+endif
+
+# return to participication block
+GotoLine 1
+FindLine "<aside id=\"participatingArtists\""
+
+
+# 편곡
+FindLine "<th scope=\"row\">편곡</th>" 1 1
+Unspace
+if "<th scope=\"row\">편곡</th>"
+    MoveLine +2
+    do
+        # fetch artist ID and Name
+        # - ID
+        OutputTo "BugsArrangerId"
+        ifoutput "BugsArrangerId"
+            Say ";"
+        endif
+        FindInLine "artist/"
+        SayRegexp "[0-9]+" "" "?"
+
+        # - name
+        OutputTo "ARRANGER"
+        ifoutput "ARRANGER"
+            Say ", "
+        endif
+        # - tidy tag
+        # : add space between opening parentheses
+        RegexpReplace "(\w)\(" "$1 (" 1
+        RegexpReplace "\" >" "\">" 1
+        FindInLine ">"
+        SayUntil "</a>"
+
+        MoveLine +2
+        Unspace
+    while "<a	href=\"https://music.bugs.co.kr/"
+endif
+
+# return to participication block
+GotoLine 1
+FindLine "<aside id=\"participatingArtists\""
+
+endif
 
 ## == main block ==
 
@@ -151,13 +301,13 @@ SayUntilML "</xmp></p>"
 FindLine "<div class=\"reference\">" 1 1
 FindLine "<cite class=\"writer\">" 1 1
 Unspace
-If "<cite class=\"writer\">"
+if "<cite class=\"writer\">"
   Saynewline
   Saynewline
   Say "* 등록: "
   FindInLine "writer\">"
   SayUntil "</cite>"
-Endif
+endif
 
 # # XXX do not place "TRACKS" tag
 # OutputTo "TRACKS"
