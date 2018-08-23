@@ -1,6 +1,6 @@
 ﻿#
 # * Mp3tag web source for Bugs / Search by Song Title
-# v0.3 / 180815
+# v0.3.1 / 180823
 # 
 # * Installation
 # - just copy this script to:
@@ -239,8 +239,15 @@ SayUntil ")</p>"
 # -------
 FindLine "\"list trackList"
 
-# TODO if multiple disc
-# FindLine "CD 2"
+# if multiple disc
+FindLine "<tr class=\"cd\">" 1 1
+Unspace
+if "<tr class=\"cd\">"
+  set "tCD" "On"
+endif
+
+GotoLine 1
+FindLine "\"list trackList"
 
 Do
   FindLine "<tr albumId=\""
@@ -257,11 +264,19 @@ Do
   # SayRegexp "[0-9]{2,}"
   Say "|"
   
+  # disc id if
+  ifoutput "tCD"
+    OutputTo "DISCNUMBER"
+    FindInLine "disc_id=\""
+    SayUntil "\""
+    Say "|"
+  endif
+
   # track title
   # remove unnecessary tags
   RegexpReplace "\(.+삽입곡\)" ""
   RegexpReplace " \">" "\">"
-    
+  
   OutputTo "tTITLE"
   FindInLine "title=\""
   SayUntil "\""
@@ -297,15 +312,17 @@ Do
   SayUntil "</a>"
   Say "|"
   
-  FindLine "</tr>"
-  MoveLine +1
-
   OutputTo "tracks"
   Say "|"
 
+  # FindLine "</tr>"
+  # MoveLine +1
+
+  FindLine "<tr albumId=\"" 1 1
 While "<tr albumId=\""
 
 # -- comment --
+GotoLine 1
 FindLine "<section class=\"sectionPadding contents albumDesc\">"
 FindLine "<p id=\"albumContents\""
 MoveLine +1
@@ -323,3 +340,4 @@ SayOutput "ttrack"
 
 set "tTITLE"
 set "ttrack"
+set "tCD"

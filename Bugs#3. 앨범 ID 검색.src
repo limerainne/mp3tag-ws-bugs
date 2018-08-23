@@ -1,5 +1,5 @@
 ﻿#
-# * Mp3tag web source for Bugs / Search by Album
+# * Mp3tag web source for Bugs / Search by Album ID directly
 # v0.3.1 / 180823
 # 
 # * Installation
@@ -19,12 +19,10 @@
 #
 [Name]=Bugs / 앨범명 검색
 [BasedOn]=https://music.bugs.co.kr
-[IndexUrl]=https://m.bugs.co.kr/search/album?q=%s
 [AlbumUrl]=https://music.bugs.co.kr/album/
 [WordSeparator]=+
-[IndexFormat]=%_url%|%_preview%|%앨범%|%아티스트%|%발매일%
-[SearchBy]=%album%
-[Encoding]=url-utf-8
+[SearchBy]=%BugsAlbumId%
+[Encoding]=utf-8
 
 # ### Album URL example ###
 # "A New Trilogy" by Lovelyz
@@ -32,71 +30,6 @@
 # CoverUrl: https://image.bugsm.co.kr/album/images/<size>/200324/20032445.jpg
 # -- size: 200, 500, 1000, original
 # -- note: care for last 2 digit! (200324 -> 200324'45')
-
-[ParserScriptIndex]=...
-debug "off" "C:\Temp\Bugs\debug_search.htm"
-# ###################################################################
-# This script parses the webpage for all releases
-# by this albumname.
-#
-# The output format is defined by IndexFormat above, which
-# is used by the selection dialog
-# ###################################################################
-do
-    # start of list element
-    FindLine "<li class=\"__mobileAlbumListlist1234\" >"
-    
-    # preview image
-    FindLine "<img src=\"https://image."
-    #FindInLine "<img src=\""
-    #SayUntil "\" alt=\""
-    
-    #Say "|"
-    
-    # album URL, preview URL
-    FindLine "class=\"albumLink\">"
-    FindInLine "<a href=\""
-    SayRegexp "[0-9]+"
-    
-    Say "|"
-    
-    MoveLine -1
-    MoveLine +1
-    FindInLine "<a href=\""
-    SayUntil "\""
-    
-    Say "|"
-    
-    # album title
-    FindLine "span class=\"albumTitle\">"
-    FindInLine "span class=\"albumTitle\">"
-    SayUntil "</span>"
-    
-    Say "|"
-    
-    # artist name
-    FindLine "span class=\"artistTitle\">"
-    FindInLine "span class=\"artistTitle\">"
-    SayUntil "</span>"
-    
-    Say "|"
-    
-    # release date
-    FindLine "<time>"
-    FindInLine "<time>"
-    
-    # - get year.month.day
-    # SayUntil "<\time>"
-    
-    # TODO to get 'year' only, use below
-    SayNChars 4
-    
-    SayNewLine
-
-    FindLine "</li>"
-    MoveLine 1
-    Unspace
-while "<li class=\"__mobileAlbumListlist1234\" >"
 
 [ParserScriptAlbum]=...
 debug "off" "C:\Temp\Bugs\debug_album.htm"
