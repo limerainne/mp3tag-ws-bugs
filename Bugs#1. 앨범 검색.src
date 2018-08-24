@@ -99,7 +99,7 @@ do
 while "<li class=\"__mobileAlbumListlist1234\" >"
 
 [ParserScriptAlbum]=...
-debug "off" "C:\Temp\Bugs\debug_album.htm"
+# debug "off" "C:\Temp\Bugs\debug_album.htm"
 # ###################################################################
 # This script parses the albums page for all common information.
 #
@@ -139,22 +139,42 @@ FindInLine "<img src=\""
 SayUntil "\""
 
 # Bugs album artist ID & Album Artist name
-FindLine "music.bugs.co.kr/artist/"
-OutputTo "BugsAlbumArtistId"
-FindInLine "artist/"
-SayRegexp "[0-9]+" "" "?"
-MoveLine +1
+FindLine "<table class=\"info"
+FindLine "아티스트"
+MoveLine +2  # "pass <td>...
+Unspace
+RegexpReplace "<a\s+href", "<a href"
+if "<a href=\"https://music.bugs.co.kr/"
+do
+    # fetch artist ID and Name
+    # - ID
+    OutputTo "BugsAlbumArtistId"
+    ifoutput "BugsAlbumArtistId"
+        Say ";"
+    endif
+    FindInLine "artist/" 1 1
+    SayRegexp "[0-9]+" "" "?"
 
-OutputTo "AlbumArtist" # TODO multiline
-# - tidy artist tag
-# : add space between opening parentheses
-RegexpReplace "(\w)\(" "$1 (" 1
-RegexpReplace "\" >" "\">" 1
+    # - name
+    MoveLine +1
+    OutputTo "AlbumArtist"
+    ifoutput "AlbumArtist"
+        Say ", "
+    endif
+    # - tidy tag
+    # : add space between opening parentheses
+    RegexpReplace "(\w)\(" "$1 (" 1
+    RegexpReplace "\" >" "\">" 1
+    SayUntilML "</a>"
 
-SayUntil "</a>"
-
-#OutputTo "Artist"
-#SayOutput "AlbumArtist"
+    MoveLine +2
+    Unspace
+while "<a href=\"https://music.bugs.co.kr/"
+else
+    OutputTo "AlbumArtist"
+    Unspace
+    SayRest
+endif
 
 # album type*
 FindLine "앨범 종류"
@@ -300,19 +320,56 @@ Do
   
   # track artist
   FindLine "<p class=\"artist\""
-  MoveLine +1
-  FindLine "\">"
+  FindLine "<a"
+
+  # if multiple artists
+  MoveLine +2
+  Unspace
+  if "<a "   # multiple artist!
+    # - pick only relevant information
+    RegexpReplace ".*PopLayer\(this, '(.+)', ''\);.*", "$1"
+    
+    OutputTo "BugsArtistId"
+    Replace "\\\\n" "$n$"
+    RegexpReplace ".+?\|\|.+?\|\|(\d+)(\$n\$)?" "$1$2"
+    Replace "$n$" ";"
+    SayRest
+    Say "|"
+
+    MoveLine -1
+    MoveLine +1
+    RegexpReplace ".*PopLayer\(this, '(.+)', ''\);.*", "$1"
+
+    OutputTo "tARTIST"
+    Replace "\\\\n" "$n$"
+    RegexpReplace ".+?\|\|(.+?)\|\|\d+(\$n\$)?" "$1$2"
+    Replace "$n$" ", "
+    SayRest
+    Say "|"
+
+  else
+    MoveLine -2
+
+    # - track artist Id
+    OutputTo "BugsArtistId"
+    FindInLine "artist/" 1 1
+    SayRegexp "[0-9]+" "" "?"
+    Say "|"
+
+    # find artist string
+    FindLine "\">"
+    
+    # - tidy DUPLICATED artist tag
+    # : add space between opening parentheses
+    RegexpReplace "(\w)\(" "$1 ("
+    
+    OutputTo "tARTIST"
+    FindInLine "\">"
+    SayUntilML "</a>"
+    Say "|"
+  endif
   
-  # - tidy DUPLICATED artist tag
-  # : add space between opening parentheses
-  RegexpReplace "(\w)\(" "$1 ("
-  
-  OutputTo "ARTIST"
-  FindInLine "\">"
-  SayUntil "</a>"
-  Say "|"
-  
-  OutputTo "tracks"
+  OutputTo "ttracks"
   Say "|"
 
   # FindLine "</tr>"
@@ -332,12 +389,20 @@ RegexpReplace "<br/>" "\r\n"
 RegexpReplace "</?\w+>" ""
 SayRest
 
-# TODO don't know, but the order is important
+# TODO don't know, but the order is important? hmm... not that case
+OutputTo "ARTIST"
+SayOutput "tARTIST"
 OutputTo "TITLE"
 SayOutput "tTITLE"
+# TODO last item has to be a "TRACK"? hmm...
 OutputTo "track"
 SayOutput "ttrack"
+OutputTo "tracks"
+SayOutput "ttracks"
+# TODO actual rule is.. last item should not be an empty item and not an single item
 
+set "tARTIST"
 set "tTITLE"
 set "ttrack"
+set "ttracks"
 set "tCD"
