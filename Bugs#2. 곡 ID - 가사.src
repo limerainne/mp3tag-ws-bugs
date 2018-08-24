@@ -71,6 +71,8 @@ FindLine "<div class=\"photos\">"
 # RegexpReplace "(album/images/)(\d+)" "$1@1000"
 # RegexpReplace "@" ""
 # 
+# RegexpReplace "(\w+\.\w+)\?.*" "$1"
+# 
 # FindInLine "<img src=\""
 # 
 # SayUntil "\""

@@ -1,4 +1,4 @@
-﻿#
+#
 # * Mp3tag web source for Bugs / Search by Album ID directly
 # v0.3.1 / 180823
 # 
@@ -64,6 +64,8 @@ OutputTo "CoverURL"
 # TODO change cover image size
 RegexpReplace "(album/images/)(\d+)" "$1@1000"
 RegexpReplace "@" ""
+
+RegexpReplace "(\w+\.\w+)\?.*" "$1"
 
 FindInLine "<img src=\""
 
