@@ -144,30 +144,39 @@ FindLine "<th scope=\"row\">보컬</th>" 1 1
 Unspace
 if "<th scope=\"row\">보컬</th>"
     MoveLine +2
+    Unspace
+    RegexpReplace "<a\s+href", "<a href"
     do
-        # fetch artist ID and Name
-        # - ID
-        OutputTo "BugsVocalId"
-        ifoutput "BugsVocalId"
-            Say ";"
-        endif
-        FindInLine "artist/"
-        SayRegexp "[0-9]+" "" "?"
+        if "<a href=\"https://music.bugs.co.kr/"
+          # fetch artist ID and Name
+          # - ID
+          OutputTo "BugsVocalId"
+          ifoutput "BugsVocalId"
+              Say ";"
+          endif
+          FindInLine "artist/"
+          SayRegexp "[0-9]+" "" "?"
 
-        # - name
-        OutputTo "Vocal"
-        ifoutput "Vocal"
-            Say ", "
+          # - name
+          OutputTo "Vocal"
+          ifoutput "Vocal"
+              Say ", "
+          endif
+          # - tidy tag
+          # : add space between opening parentheses
+          RegexpReplace "(\w)\(" "$1 (" 1
+          RegexpReplace "\" >" "\">" 1
+          FindInLine ">"
+          SayUntil "</a>"
+        else
+          OutputTo "Vocal"
+          Unspace
+          SayRest
         endif
-        # - tidy tag
-        # : add space between opening parentheses
-        RegexpReplace "(\w)\(" "$1 (" 1
-        RegexpReplace "\" >" "\">" 1
-        FindInLine ">"
-        SayUntil "</a>"
 
         MoveLine +2
         Unspace
+        RegexpReplace "<a\s+href", "<a href"
     while "<a	href=\"https://music.bugs.co.kr/"
 endif
 
@@ -181,30 +190,40 @@ FindLine "<th scope=\"row\">작곡</th>" 1 1
 Unspace
 if "<th scope=\"row\">작곡</th>"
     MoveLine +2
+    Unspace
+    RegexpReplace "<a\s+href", "<a href"
     do
-        # fetch artist ID and Name
-        # - ID
-        OutputTo "BugsComposerId"
-        ifoutput "BugsComposerId"
-            Say ";"
-        endif
-        FindInLine "artist/"
-        SayRegexp "[0-9]+" "" "?"
+        if "<a href=\"https://music.bugs.co.kr/"
+          # fetch artist ID and Name
+          # - ID
+          OutputTo "BugsComposerId"
+          ifoutput "BugsComposerId"
+              Say ";"
+          endif
+          FindInLine "artist/"
+          SayRegexp "[0-9]+" "" "?"
 
-        # - name
-        OutputTo "COMPOSER"
-        ifoutput "COMPOSER"
-            Say ", "
+          # - name
+          OutputTo "COMPOSER"
+          ifoutput "COMPOSER"
+              Say ", "
+          endif
+          # - tidy tag
+          # : add space between opening parentheses
+          RegexpReplace "(\w)\(" "$1 (" 1
+          RegexpReplace "\" >" "\">" 1
+          FindInLine ">"
+          SayUntil "</a>"
+        
+        else
+          OutputTo "COMPOSER"
+          Unspace
+          SayRest
         endif
-        # - tidy tag
-        # : add space between opening parentheses
-        RegexpReplace "(\w)\(" "$1 (" 1
-        RegexpReplace "\" >" "\">" 1
-        FindInLine ">"
-        SayUntil "</a>"
 
         MoveLine +2
         Unspace
+        RegexpReplace "<a\s+href", "<a href"
     while "<a	href=\"https://music.bugs.co.kr/"
 endif
 
@@ -218,30 +237,40 @@ FindLine "<th scope=\"row\">작사</th>" 1 1
 Unspace
 if "<th scope=\"row\">작사</th>"
     MoveLine +2
+    Unspace
+    RegexpReplace "<a\s+href", "<a href"
     do
-        # fetch artist ID and Name
-        # - ID
-        OutputTo "BugsLyricistId"
-        ifoutput "BugsLyricistId"
-            Say ";"
-        endif
-        FindInLine "artist/"
-        SayRegexp "[0-9]+" "" "?"
+        if "<a href=\"https://music.bugs.co.kr/"
+          # fetch artist ID and Name
+          # - ID
+          OutputTo "BugsLyricistId"
+          ifoutput "BugsLyricistId"
+              Say ";"
+          endif
+          FindInLine "artist/"
+          SayRegexp "[0-9]+" "" "?"
 
-        # - name
-        OutputTo "LYRICIST"
-        ifoutput "LYRICIST"
-            Say ", "
+          # - name
+          OutputTo "LYRICIST"
+          ifoutput "LYRICIST"
+              Say ", "
+          endif
+          # - tidy tag
+          # : add space between opening parentheses
+          RegexpReplace "(\w)\(" "$1 (" 1
+          RegexpReplace "\" >" "\">" 1
+          FindInLine ">"
+          SayUntil "</a>"
+        
+        else
+          OutputTo "LYRICIST"
+          Unspace
+          SayRest
         endif
-        # - tidy tag
-        # : add space between opening parentheses
-        RegexpReplace "(\w)\(" "$1 (" 1
-        RegexpReplace "\" >" "\">" 1
-        FindInLine ">"
-        SayUntil "</a>"
-
+        
         MoveLine +2
         Unspace
+        RegexpReplace "<a\s+href", "<a href"
     while "<a	href=\"https://music.bugs.co.kr/"
 endif
 
@@ -255,30 +284,40 @@ FindLine "<th scope=\"row\">편곡</th>" 1 1
 Unspace
 if "<th scope=\"row\">편곡</th>"
     MoveLine +2
+    Unspace
+    RegexpReplace "<a\s+href", "<a href"
     do
-        # fetch artist ID and Name
-        # - ID
-        OutputTo "BugsArrangerId"
-        ifoutput "BugsArrangerId"
-            Say ";"
-        endif
-        FindInLine "artist/"
-        SayRegexp "[0-9]+" "" "?"
+        if "<a href=\"https://music.bugs.co.kr/"
+          # fetch artist ID and Name
+          # - ID
+          OutputTo "BugsArrangerId"
+          ifoutput "BugsArrangerId"
+              Say ";"
+          endif
+          FindInLine "artist/"
+          SayRegexp "[0-9]+" "" "?"
 
-        # - name
-        OutputTo "ARRANGER"
-        ifoutput "ARRANGER"
-            Say ", "
+          # - name
+          OutputTo "ARRANGER"
+          ifoutput "ARRANGER"
+              Say ", "
+          endif
+          # - tidy tag
+          # : add space between opening parentheses
+          RegexpReplace "(\w)\(" "$1 (" 1
+          RegexpReplace "\" >" "\">" 1
+          FindInLine ">"
+          SayUntil "</a>"
+        
+        else
+          OutputTo "ARRANGER"
+          Unspace
+          SayRest
         endif
-        # - tidy tag
-        # : add space between opening parentheses
-        RegexpReplace "(\w)\(" "$1 (" 1
-        RegexpReplace "\" >" "\">" 1
-        FindInLine ">"
-        SayUntil "</a>"
 
         MoveLine +2
         Unspace
+        RegexpReplace "<a\s+href", "<a href"
     while "<a	href=\"https://music.bugs.co.kr/"
 endif
 
