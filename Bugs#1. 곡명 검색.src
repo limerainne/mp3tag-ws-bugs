@@ -296,7 +296,7 @@ Do
 
   # track title
   # remove unnecessary tags
-  RegexpReplace "\(.+삽입곡\)" ""
+  RegexpReplace "\(.+곡\)" ""
   RegexpReplace " \">" "\">"
   
   OutputTo "tTITLE"
