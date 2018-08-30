@@ -171,6 +171,7 @@ if "<th scope=\"row\">보컬</th>"
         else
           OutputTo "Vocal"
           Unspace
+          RegexpReplace "<[^>]+?>" ""
           SayRest
         endif
 
@@ -218,6 +219,7 @@ if "<th scope=\"row\">작곡</th>"
         else
           OutputTo "COMPOSER"
           Unspace
+          RegexpReplace "<[^>]+?>" ""
           SayRest
         endif
 
@@ -265,6 +267,7 @@ if "<th scope=\"row\">작사</th>"
         else
           OutputTo "LYRICIST"
           Unspace
+          RegexpReplace "<[^>]+?>" ""
           SayRest
         endif
         
@@ -312,6 +315,7 @@ if "<th scope=\"row\">편곡</th>"
         else
           OutputTo "ARRANGER"
           Unspace
+          RegexpReplace "<[^>]+?>" ""
           SayRest
         endif
 
@@ -334,6 +338,7 @@ FindLine "<div class=\"lyricsContainer\">"
 FindLine "<p class=\"comingsoon\">" 1 1
 Unspace
 ifnot "<p class=\"comingsoon\">"
+  GotoLine 1
   FindLine "<div class=\"lyricsContainer\">"
   FindLine "<p><xmp>"
   OutputTo "UNSYNCEDLYRICS"
