@@ -178,7 +178,7 @@ if "<th scope=\"row\">보컬</th>"
         MoveLine +2
         Unspace
         RegexpReplace "<a\s+href", "<a href"
-    while "<a	href=\"https://music.bugs.co.kr/"
+    while "<a href=\"https://music.bugs.co.kr/"
 endif
 
 # return to participication block
@@ -226,7 +226,7 @@ if "<th scope=\"row\">작곡</th>"
         MoveLine +2
         Unspace
         RegexpReplace "<a\s+href", "<a href"
-    while "<a	href=\"https://music.bugs.co.kr/"
+    while "<a href=\"https://music.bugs.co.kr/"
 endif
 
 # return to participication block
@@ -274,7 +274,7 @@ if "<th scope=\"row\">작사</th>"
         MoveLine +2
         Unspace
         RegexpReplace "<a\s+href", "<a href"
-    while "<a	href=\"https://music.bugs.co.kr/"
+    while "<a href=\"https://music.bugs.co.kr/"
 endif
 
 # return to participication block
@@ -322,7 +322,7 @@ if "<th scope=\"row\">편곡</th>"
         MoveLine +2
         Unspace
         RegexpReplace "<a\s+href", "<a href"
-    while "<a	href=\"https://music.bugs.co.kr/"
+    while "<a href=\"https://music.bugs.co.kr/"
 endif
 
 # return to participication block
