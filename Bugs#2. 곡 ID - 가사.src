@@ -186,6 +186,55 @@ GotoLine 1
 FindLine "<aside id=\"participatingArtists\""
 
 
+# Featured artist
+# ref: https://music.bugs.co.kr/track/5382125
+FindLine "<th scope=\"row\">피쳐링</th>" 1 1
+Unspace
+if "<th scope=\"row\">피쳐링</th>"
+    MoveLine +2
+    Unspace
+    RegexpReplace "<a\s+href", "<a href"
+    do
+        if "<a href=\"https://music.bugs.co.kr/"
+          # fetch artist ID and Name
+          # - ID
+          OutputTo "BugsFeaturingId"
+          ifoutput "BugsFeaturingId"
+              Say ";"
+          endif
+          FindInLine "artist/"
+          SayRegexp "[0-9]+" "" "?"
+
+          # - name
+          # NOTE not a formal tag...
+          OutputTo "Featuring"
+          ifoutput "Featuring"
+              Say ", "
+          endif
+          # - tidy tag
+          # : add space between opening parentheses
+          RegexpReplace "(\w)\(" "$1 (" 1
+          RegexpReplace "\" >" "\">" 1
+          FindInLine ">"
+          SayUntil "</a>"
+        else
+          OutputTo "Featuring"
+          Unspace
+          RegexpReplace "<[^>]+?>" ""
+          SayRest
+        endif
+
+        MoveLine +2
+        Unspace
+        RegexpReplace "<a\s+href", "<a href"
+    while "<a href=\"https://music.bugs.co.kr/"
+endif
+
+# return to participication block
+GotoLine 1
+FindLine "<aside id=\"participatingArtists\""
+
+
 # 작곡
 FindLine "<th scope=\"row\">작곡</th>" 1 1
 Unspace
