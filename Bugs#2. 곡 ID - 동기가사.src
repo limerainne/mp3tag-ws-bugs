@@ -1,0 +1,162 @@
+﻿#
+# * Mp3tag web source for Bugs / Fetch a synced lyric from found track ID
+# v0.4.4 / 181128
+# 
+# * Installation
+# - just copy this script to:
+# %appdata%\Mp3tag\data\sources\
+# - NOTE '#' in filename makes submenu!
+#
+[Name]=Bugs / 곡 ID - 동기가사
+[BasedOn]=https://music.bugs.co.kr
+[AlbumUrl]=https://music.bugs.co.kr/player/lyrics/T/
+[WordSeparator]=+
+[SearchBy]=%BugsTrackId%
+[Encoding]=utf-8
+
+# TODO UserAgent
+# ref: https://community.mp3tag.de/t/cant-get-full-browser-html-source-for-imdb-titles/41140/4
+# default: "Mozilla/5.0 (compatible)", if enabled below: "Mp3tag/<version>"
+# [UserAgent]=1
+
+# ### Lyric API (from web player) URL example ###
+# "Dear You" by Lovelyz
+# LyricUrl (JSON): https://music.bugs.co.kr/player/lyrics/T/30233396
+
+[ParserScriptAlbum]=...
+debug "off" "C:\Temp\Bugs\debug_album.htm"
+# ###################################################################
+# This script parses the albums page for all common information.
+#
+# The current output variable is set via the outputto command
+# All these fields are used by the confirm online information dialog
+# ###################################################################
+json "ON"
+
+# "LYRICS" tag can contain LRC formatted lyrics
+# ref: https://en.wikipedia.org/wiki/LRC_(file_format)
+
+# created by
+outputto "LYRICS"
+json_select "userId"
+Say "[by:"
+SayRest
+Say "]"
+SayNewline
+SayNewline
+
+# actual lyrics
+outputto "LYRICS"
+json_select "lyrics"
+
+# NOTE original lyrics format
+# e.g. "23.3|네가 좋아 쉽게 말해도＃27.2|지금 내 맘조차 가볍단 건 아니야＃..."
+
+## brute-force conversion to LRC format
+### time brackets [mm:ss.xx], delimiter to newline character
+RegexpReplace "＃" "\r\n"     # delimiter -> newline
+RegexpReplace "\|" "0]"       # "#ss.x" --> "#ss.x0", and a closing bracket
+
+### #s? to mm:s?
+# 0-9s
+RegexpReplace "^(\d\.)" "00:0\1"
+# 10-59s
+RegexpReplace "^([1-5]\d\.)" "00:\1"
+
+# 1m0s - 15m9s
+# TODO Mp3tag tag source script does not support arithmetic computations, loop statements...
+# ( OK, I know. I also ashamed of myself ;-) )
+# TODO ignore tracks with its length longer than 15m9s
+RegexpReplace "^6(\d\.)" "01:0\1"
+RegexpReplace "^7(\d\.)" "01:1\1"
+RegexpReplace "^8(\d\.)" "01:2\1"
+RegexpReplace "^9(\d\.)" "01:3\1"
+RegexpReplace "^10(\d\.)" "01:4\1"
+RegexpReplace "^11(\d\.)" "01:5\1"
+RegexpReplace "^12(\d\.)" "02:0\1"
+RegexpReplace "^13(\d\.)" "02:1\1"
+RegexpReplace "^14(\d\.)" "02:2\1"
+RegexpReplace "^15(\d\.)" "02:3\1"
+RegexpReplace "^16(\d\.)" "02:4\1"
+RegexpReplace "^17(\d\.)" "02:5\1"
+RegexpReplace "^18(\d\.)" "03:0\1"
+RegexpReplace "^19(\d\.)" "03:1\1"
+RegexpReplace "^20(\d\.)" "03:2\1"
+RegexpReplace "^21(\d\.)" "03:3\1"
+RegexpReplace "^22(\d\.)" "03:4\1"
+RegexpReplace "^23(\d\.)" "03:5\1"
+RegexpReplace "^24(\d\.)" "04:0\1"
+RegexpReplace "^25(\d\.)" "04:1\1"
+RegexpReplace "^26(\d\.)" "04:2\1"
+RegexpReplace "^27(\d\.)" "04:3\1"
+RegexpReplace "^28(\d\.)" "04:4\1"
+RegexpReplace "^29(\d\.)" "04:5\1"
+RegexpReplace "^30(\d\.)" "05:0\1"
+RegexpReplace "^31(\d\.)" "05:1\1"
+RegexpReplace "^32(\d\.)" "05:2\1"
+RegexpReplace "^33(\d\.)" "05:3\1"
+RegexpReplace "^34(\d\.)" "05:4\1"
+RegexpReplace "^35(\d\.)" "05:5\1"
+RegexpReplace "^36(\d\.)" "06:0\1"
+RegexpReplace "^37(\d\.)" "06:1\1"
+RegexpReplace "^38(\d\.)" "06:2\1"
+RegexpReplace "^39(\d\.)" "06:3\1"
+RegexpReplace "^40(\d\.)" "06:4\1"
+RegexpReplace "^41(\d\.)" "06:5\1"
+RegexpReplace "^42(\d\.)" "07:0\1"
+RegexpReplace "^43(\d\.)" "07:1\1"
+RegexpReplace "^44(\d\.)" "07:2\1"
+RegexpReplace "^45(\d\.)" "07:3\1"
+RegexpReplace "^46(\d\.)" "07:4\1"
+RegexpReplace "^47(\d\.)" "07:5\1"
+RegexpReplace "^48(\d\.)" "08:0\1"
+RegexpReplace "^49(\d\.)" "08:1\1"
+RegexpReplace "^50(\d\.)" "08:2\1"
+RegexpReplace "^51(\d\.)" "08:3\1"
+RegexpReplace "^52(\d\.)" "08:4\1"
+RegexpReplace "^53(\d\.)" "08:5\1"
+RegexpReplace "^54(\d\.)" "09:0\1"
+RegexpReplace "^55(\d\.)" "09:1\1"
+RegexpReplace "^56(\d\.)" "09:2\1"
+RegexpReplace "^57(\d\.)" "09:3\1"
+RegexpReplace "^58(\d\.)" "09:4\1"
+RegexpReplace "^59(\d\.)" "09:5\1"
+RegexpReplace "^60(\d\.)" "10:0\1"
+RegexpReplace "^61(\d\.)" "10:1\1"
+RegexpReplace "^62(\d\.)" "10:2\1"
+RegexpReplace "^63(\d\.)" "10:3\1"
+RegexpReplace "^64(\d\.)" "10:4\1"
+RegexpReplace "^65(\d\.)" "10:5\1"
+RegexpReplace "^66(\d\.)" "11:0\1"
+RegexpReplace "^67(\d\.)" "11:1\1"
+RegexpReplace "^68(\d\.)" "11:2\1"
+RegexpReplace "^69(\d\.)" "11:3\1"
+RegexpReplace "^70(\d\.)" "11:4\1"
+RegexpReplace "^71(\d\.)" "11:5\1"
+RegexpReplace "^72(\d\.)" "12:0\1"
+RegexpReplace "^73(\d\.)" "12:1\1"
+RegexpReplace "^74(\d\.)" "12:2\1"
+RegexpReplace "^75(\d\.)" "12:3\1"
+RegexpReplace "^76(\d\.)" "12:4\1"
+RegexpReplace "^77(\d\.)" "12:5\1"
+RegexpReplace "^78(\d\.)" "13:0\1"
+RegexpReplace "^79(\d\.)" "13:1\1"
+RegexpReplace "^80(\d\.)" "13:2\1"
+RegexpReplace "^81(\d\.)" "13:3\1"
+RegexpReplace "^82(\d\.)" "13:4\1"
+RegexpReplace "^83(\d\.)" "13:5\1"
+RegexpReplace "^84(\d\.)" "14:0\1"
+RegexpReplace "^85(\d\.)" "14:1\1"
+RegexpReplace "^86(\d\.)" "14:2\1"
+RegexpReplace "^87(\d\.)" "14:3\1"
+RegexpReplace "^88(\d\.)" "14:4\1"
+RegexpReplace "^89(\d\.)" "14:5\1"
+RegexpReplace "^90(\d\.)" "15:0\1"
+
+
+### place an opening bracket for each line
+RegexpReplace "^" "["          # place an opening bracket at the begining of the first line
+
+## dump string to tag
+SayRest
+SayNewline
