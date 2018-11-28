@@ -1,21 +1,11 @@
 ﻿#
 # * Mp3tag web source for Bugs / Fetch a lyric from found track ID
-# v0.4.3 / 180911
+# v0.4.4 / 181128
 # 
 # * Installation
 # - just copy this script to:
 # %appdata%\Mp3tag\data\sources\
 # - NOTE '#' in filename makes submenu!
-# 
-# ---- Original by...
-# Mp3tag parsing for Melon.com
-#
-# Created by Hyosang Park http://hyosang.kr
-# Last modified 2016.11.02
-#
-# Save it in your Mp3tag data directory, i.e.
-# C:\Documents and Settings\*username*\Application Data\Mp3tag\data\sources
-# ----
 #
 [Name]=Bugs / 곡 ID - 가사
 [BasedOn]=https://music.bugs.co.kr
@@ -37,7 +27,7 @@
 # -- note: care for last 2 digit! (200324 -> 200324'45')
 
 [ParserScriptAlbum]=...
-debug "off" "C:\Temp\Bugs\debug_album.htm"
+debug "on" "C:\Temp\Bugs\debug_album.htm"
 # ###################################################################
 # This script parses the albums page for all common information.
 #
@@ -143,10 +133,12 @@ FindLine "<aside id=\"participatingArtists\""
 FindLine "<th scope=\"row\">보컬</th>" 1 1
 Unspace
 if "<th scope=\"row\">보컬</th>"
-    MoveLine +2
-    Unspace
-    RegexpReplace "<a\s+href", "<a href"
+    MoveLine +1   # move to one line above first item
     do
+        MoveLine +1
+        Unspace
+        RegexpReplace "<a\s+href", "<a href"
+        
         if "<a href=\"https://music.bugs.co.kr/"
           # fetch artist ID and Name
           # - ID
@@ -169,16 +161,26 @@ if "<th scope=\"row\">보컬</th>"
           FindInLine ">"
           SayUntil "</a>"
         else
+          # - ID (nonexist)
+          OutputTo "BugsVocalId"
+          ifoutput "BugsVocalId"
+              Say ";"
+          endif
+          Say "_"
+          
+          # - name
           OutputTo "Vocal"
+          ifoutput "Vocal"
+              Say ", "
+          endif
           Unspace
           RegexpReplace "<[^>]+?>" ""
           SayRest
         endif
 
-        MoveLine +2
+        MoveLine +1
         Unspace
-        RegexpReplace "<a\s+href", "<a href"
-    while "<a href=\"https://music.bugs.co.kr/"
+    while ","
 endif
 
 # return to participication block
@@ -191,10 +193,12 @@ FindLine "<aside id=\"participatingArtists\""
 FindLine "<th scope=\"row\">피쳐링</th>" 1 1
 Unspace
 if "<th scope=\"row\">피쳐링</th>"
-    MoveLine +2
-    Unspace
-    RegexpReplace "<a\s+href", "<a href"
+    MoveLine +1
     do
+        MoveLine +1
+        Unspace
+        RegexpReplace "<a\s+href", "<a href"
+        
         if "<a href=\"https://music.bugs.co.kr/"
           # fetch artist ID and Name
           # - ID
@@ -218,16 +222,26 @@ if "<th scope=\"row\">피쳐링</th>"
           FindInLine ">"
           SayUntil "</a>"
         else
+          # - ID (nonexist)
+          OutputTo "BugsFeaturingId"
+          ifoutput "BugsFeaturingId"
+              Say ";"
+          endif
+          Say "_"
+          
+          # - name
           OutputTo "Featuring"
+          ifoutput "Featuring"
+              Say ", "
+          endif
           Unspace
           RegexpReplace "<[^>]+?>" ""
           SayRest
         endif
 
-        MoveLine +2
+        MoveLine +1
         Unspace
-        RegexpReplace "<a\s+href", "<a href"
-    while "<a href=\"https://music.bugs.co.kr/"
+    while ","
 endif
 
 # return to participication block
@@ -239,10 +253,12 @@ FindLine "<aside id=\"participatingArtists\""
 FindLine "<th scope=\"row\">작곡</th>" 1 1
 Unspace
 if "<th scope=\"row\">작곡</th>"
-    MoveLine +2
-    Unspace
-    RegexpReplace "<a\s+href", "<a href"
+    MoveLine +1
     do
+        MoveLine +1
+        Unspace
+        RegexpReplace "<a\s+href", "<a href"
+        
         if "<a href=\"https://music.bugs.co.kr/"
           # fetch artist ID and Name
           # - ID
@@ -266,16 +282,26 @@ if "<th scope=\"row\">작곡</th>"
           SayUntil "</a>"
         
         else
+          # - ID (nonexist)
+          OutputTo "BugsComposerId"
+          ifoutput "BugsComposerId"
+              Say ";"
+          endif
+          Say "_"
+          
+          # - name
           OutputTo "COMPOSER"
+          ifoutput "COMPOSER"
+              Say ", "
+          endif
           Unspace
           RegexpReplace "<[^>]+?>" ""
           SayRest
         endif
 
-        MoveLine +2
+        MoveLine +1
         Unspace
-        RegexpReplace "<a\s+href", "<a href"
-    while "<a href=\"https://music.bugs.co.kr/"
+    while ","
 endif
 
 # return to participication block
@@ -287,10 +313,12 @@ FindLine "<aside id=\"participatingArtists\""
 FindLine "<th scope=\"row\">작사</th>" 1 1
 Unspace
 if "<th scope=\"row\">작사</th>"
-    MoveLine +2
-    Unspace
-    RegexpReplace "<a\s+href", "<a href"
+    MoveLine +1
     do
+        MoveLine +1
+        Unspace
+        RegexpReplace "<a\s+href", "<a href"
+    
         if "<a href=\"https://music.bugs.co.kr/"
           # fetch artist ID and Name
           # - ID
@@ -314,16 +342,26 @@ if "<th scope=\"row\">작사</th>"
           SayUntil "</a>"
         
         else
+          # - ID (nonexist)
+          OutputTo "BugsLyricistId"
+          ifoutput "BugsLyricistId"
+              Say ";"
+          endif
+          Say "_"
+          
+          # - name
           OutputTo "LYRICIST"
+          ifoutput "LYRICIST"
+              Say ", "
+          endif
           Unspace
           RegexpReplace "<[^>]+?>" ""
           SayRest
         endif
         
-        MoveLine +2
+        MoveLine +1
         Unspace
-        RegexpReplace "<a\s+href", "<a href"
-    while "<a href=\"https://music.bugs.co.kr/"
+    while ","
 endif
 
 # return to participication block
@@ -335,10 +373,12 @@ FindLine "<aside id=\"participatingArtists\""
 FindLine "<th scope=\"row\">편곡</th>" 1 1
 Unspace
 if "<th scope=\"row\">편곡</th>"
-    MoveLine +2
-    Unspace
-    RegexpReplace "<a\s+href", "<a href"
+    MoveLine +1
     do
+        MoveLine +1
+        Unspace
+        RegexpReplace "<a\s+href", "<a href"
+        
         if "<a href=\"https://music.bugs.co.kr/"
           # fetch artist ID and Name
           # - ID
@@ -362,16 +402,26 @@ if "<th scope=\"row\">편곡</th>"
           SayUntil "</a>"
         
         else
+          # - ID (nonexist)
+          OutputTo "BugsArrangerId"
+          ifoutput "BugsArrangerId"
+              Say ";"
+          endif
+          Say "_"
+          
+          # - name
           OutputTo "ARRANGER"
+          ifoutput "ARRANGER"
+              Say ", "
+          endif
           Unspace
           RegexpReplace "<[^>]+?>" ""
           SayRest
         endif
 
-        MoveLine +2
+        MoveLine +1
         Unspace
-        RegexpReplace "<a\s+href", "<a href"
-    while "<a href=\"https://music.bugs.co.kr/"
+    while ","
 endif
 
 # return to participication block
