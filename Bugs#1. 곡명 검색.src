@@ -1,6 +1,6 @@
 ﻿#
 # * Mp3tag web source for Bugs / Search by Song Title
-# v0.4.2 / 180831
+# v0.4.5 / 190314
 # 
 # * Installation
 # - just copy this script to:
@@ -46,14 +46,6 @@ do
     # start of list element
     FindLine "<li class=\"__MobileTrackListsearch1234"
     
-    # preview image
-    FindLine "<img src=\"https://image."
-    #FindInLine "<img src=\""
-    #SayUntil "\" alt=\""
-    MoveLine -2
-    
-    #Say "|"
-    
     # album ID from cover image url
     FindLine "<img src=\"https://image."
     FindInLine "album/images/"
@@ -77,7 +69,9 @@ do
     # # preview URL (track page)
     # FindLine "class=\"trackLink\">"
     # FindInLine "<a href=\""
-    # SayUntil "\""
+    # # ref: [URL regex] https://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
+    # # TODO at the end of regex match, cannot remove default separator ' ' (space)
+    # SayRegexp "https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}[a-zA-Z0-9//]*"
     
     Say "|"
     
