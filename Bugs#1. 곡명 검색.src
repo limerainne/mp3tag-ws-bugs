@@ -191,12 +191,24 @@ SayUntil "\">"
 # TODO to get 'year' only, use below
 # SayNChars 4
 
-# genre*
+# genre** -- multiline
 FindLine "장르"
 MoveLine +2
+joinuntil "</tr>"
 OutputTo "GENRE"
 FindInLine "\">"
 SayUntil "</a>"
+FindInLine "\">" 1 1
+MoveChar -2
+if "\">"
+  do
+    MoveChar +2
+    Say ", "
+    SayUntil "</a>"
+    FindInLine "\">" 1 1
+    MoveChar -2
+  while "\">"
+endif
 
 # style** -- multiline
 FindLine "스타일"
