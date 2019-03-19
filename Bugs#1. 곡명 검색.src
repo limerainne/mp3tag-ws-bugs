@@ -1,6 +1,6 @@
 ﻿#
 # * Mp3tag web source for Bugs / Search by Song Title
-# v0.4.5 / 190314
+# v0.4.6 / 190319
 # 
 # * Installation
 # - just copy this script to:
@@ -231,7 +231,8 @@ endif
 
 # publisher*
 FindLine "기획사" 1 1
-if "							<th scope="row">기획사</th>"
+Unspace
+if "<th scope="row">기획사</th>"
   MoveLine +1
   OutputTo "PUBLISHER"
   FindInLine "<td>"
@@ -242,7 +243,8 @@ endif
 
 # distributer*
 FindLine "유통사" 1 1
-if "							<th scope="row">유통사</th>"
+Unspace
+if "<th scope="row">유통사</th>"
   MoveLine +1
   OutputTo "DISTRIBUTER"
   FindInLine "<td>"
@@ -388,27 +390,29 @@ While "<tr albumId=\""
 
 # -- comment --
 GotoLine 1
-FindLine "<section class=\"sectionPadding contents albumDesc\">"
-FindLine "<p id=\"albumContents\""
-MoveLine +1
-OutputTo "ALBUMDESCRIPTION"
-# NOTE CR+LF, not just LF, it's Windows...!
-RegexpReplace "<br/>" "\r\n"
-RegexpReplace "</?\w+>" ""
-SayRest
+FindLine "<section class=\"sectionPadding contents albumDesc\">" 1 1
+Unspace
+if "<section class=\"sectionPadding contents albumDesc\">"
+  FindLine "<p id=\"albumContents\""
+  MoveLine +1
+  OutputTo "ALBUMDESCRIPTION"
+  # NOTE CR+LF, not just LF, it's Windows...!
+  RegexpReplace "<br/>" "\r\n"
+  RegexpReplace "</?\w+>" ""
+  SayRest
+endif
 
-# TODO don't know, but the order is important? hmm... not that case
 OutputTo "ARTIST"
 SayOutput "tARTIST"
 OutputTo "TITLE"
 SayOutput "tTITLE"
-# TODO last item has to be a "TRACK"? hmm...
 OutputTo "track"
 SayOutput "ttrack"
 OutputTo "tracks"
 SayOutput "ttracks"
-# TODO actual rule is.. last item should not be an empty item and not an single item
+# NOTE to show multiple tracks, last item should not be an empty one or a single item
 
+# drop temporary variables
 set "tARTIST"
 set "tTITLE"
 set "ttrack"
