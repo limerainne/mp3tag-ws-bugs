@@ -1,6 +1,6 @@
 ﻿#
 # * Mp3tag web source for Bugs / Search by Album
-# v0.4.6 / 190319
+# v0.4.7 / 190604
 # 
 # * Installation
 # - just copy this script to:
@@ -157,7 +157,7 @@ do
         Say ", "
     endif
     # - tidy tag
-    # : add space between opening parentheses
+    # add space before opening parenthesis
     RegexpReplace "(\w)\(" "$1 (" 1
     RegexpReplace "\" >" "\">" 1
     SayUntilML "</a>"
@@ -353,6 +353,8 @@ Do
     Replace "\\\\n" "$n$"
     RegexpReplace ".+?\|\|(.+?)\|\|\d+(\$n\$)?" "$1$2"
     Replace "$n$" ", "
+    # add space before opening parenthesis
+    RegexpReplace "(\w)\(" "$1 ("
     SayRest
     Say "|"
 
