@@ -1,5 +1,7 @@
 # Mp3tag Tag Sources for Bugs
 
+[![Release][release-badge]][release]
+
 ## 기능
 * Bugs의 고품질 음원 태그 정보를 이용할 수 있습니다.
   * 앨범 정보, 앨범아트, 트랙 정보를 가져올 수 있습니다.
@@ -10,8 +12,8 @@
 
 ## 설치
 
-* 먼저 [Mp3tag](https://www.mp3tag.de/en) 프로그램을 설치하세요.
-* 본 저장소의 [Releases](https://github.com/limerainne/mp3tag-ws-bugs/releases) 페이지에서 최신 버전 소스를 받으세요.
+* 먼저 [Mp3tag][mp3tag-homepage] 프로그램을 설치하세요.
+* 본 저장소의 [Releases][release] 페이지에서 최신 버전 소스를 받으세요.
 * Windows 탐색기에서 `%appdata%\Mp3tag\data\sources\` 경로로 이동한 뒤, 받은 소스 파일 중 `src` 확장자 파일을 두세요.
 
 ## 사용법
@@ -52,3 +54,7 @@ SayUntil "\">"
 
 * 동기 가사: **곡 길이**가 **15분 이내**인 경우만 가져올 수 있음
   * Mp3tag 스크립트 기능 제약으로 인해 LRC 포맷 초 -> 분 변환을 수동으로 하였습니다..
+
+[mp3tag-homepage]:https://www.mp3tag.de/en
+[release]:https://github.com/limerainne/mp3tag-ws-bugs/releases
+[release-badge]:https://img.shields.io/github/release/limerainne/mp3tag-ws-bugs.svg?style=for-the-badge
