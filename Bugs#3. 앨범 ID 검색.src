@@ -1,4 +1,4 @@
-﻿#
+#
 # * Mp3tag web source for Bugs / Search by Album ID directly
 # v0.4.7 / 190604
 # 
@@ -96,7 +96,8 @@ do
     endif
     # - tidy tag
     # add space before opening parenthesis
-    RegexpReplace "(\w)\(" "$1 (" 1
+    RegexpReplace "(\w{2,})\(" "$1 ("
+    # NOTE require 2+ chars. to avoid 'f(x)' -> 'f (x)'
     RegexpReplace "\" >" "\">" 1
     SayUntilML "</a>"
 
@@ -292,7 +293,8 @@ Do
     RegexpReplace ".+?\|\|(.+?)\|\|\d+(\$n\$)?" "$1$2"
     Replace "$n$" ", "
     # add space before opening parenthesis
-    RegexpReplace "(\w)\(" "$1 ("
+    RegexpReplace "(\w{2,})\(" "$1 ("
+    # NOTE require 2+ chars. to avoid 'f(x)' -> 'f (x)'
     SayRest
     Say "|"
 
@@ -310,7 +312,8 @@ Do
     
     # - tidy DUPLICATED artist tag
     # add space before opening parenthesis
-    RegexpReplace "(\w)\(" "$1 ("
+    RegexpReplace "(\w{2,})\(" "$1 ("
+    # NOTE require 2+ chars. to avoid 'f(x)' -> 'f (x)'
     
     OutputTo "tARTIST"
     FindInLine "\">"

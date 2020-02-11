@@ -1,4 +1,4 @@
-﻿#
+#
 # * Mp3tag web source for Bugs / Fetch a lyric from found track ID
 # v0.4.4 / 181128
 # 
@@ -79,7 +79,8 @@ FindLine "music.bugs.co.kr/artist/"
 # OutputTo "ARTIST" # TODO multiline?
 # # - tidy artist tag
 # # : add space between opening parentheses
-# RegexpReplace "(\w)\(" "$1 (" 1
+# RegexpReplace "(\w{2,})\(" "$1 ("
+# # NOTE require 2+ chars. to avoid 'f(x)' -> 'f (x)'
 # RegexpReplace "\" >" "\">" 1
 # 
 # SayUntil "</a>"
@@ -107,7 +108,8 @@ FindLine "music.bugs.co.kr/album/"
 # OutputTo "ALBUM" # TODO multiline?
 # # - tidy album tag
 # # : add space between opening parentheses
-# RegexpReplace "(\w)\(" "$1 (" 1
+# RegexpReplace "(\w{2,})\(" "$1 ("
+# # NOTE require 2+ chars. to avoid 'f(x)' -> 'f (x)'
 # # : ...?
 # RegexpReplace "\" >" "\">" 1
 # FindInLine "\">"
@@ -156,7 +158,8 @@ if "<th scope=\"row\">보컬</th>"
           endif
           # - tidy tag
           # : add space between opening parentheses
-          RegexpReplace "(\w)\(" "$1 (" 1
+          RegexpReplace "(\w{2,})\(" "$1 ("
+          # NOTE require 2+ chars. to avoid 'f(x)' -> 'f (x)'
           RegexpReplace "\" >" "\">" 1
           FindInLine ">"
           SayUntil "</a>"
@@ -217,7 +220,8 @@ if "<th scope=\"row\">피쳐링</th>"
           endif
           # - tidy tag
           # : add space between opening parentheses
-          RegexpReplace "(\w)\(" "$1 (" 1
+          RegexpReplace "(\w{2,})\(" "$1 ("
+          # NOTE require 2+ chars. to avoid 'f(x)' -> 'f (x)'
           RegexpReplace "\" >" "\">" 1
           FindInLine ">"
           SayUntil "</a>"
@@ -276,7 +280,8 @@ if "<th scope=\"row\">작곡</th>"
           endif
           # - tidy tag
           # : add space between opening parentheses
-          RegexpReplace "(\w)\(" "$1 (" 1
+          RegexpReplace "(\w{2,})\(" "$1 ("
+          # NOTE require 2+ chars. to avoid 'f(x)' -> 'f (x)'
           RegexpReplace "\" >" "\">" 1
           FindInLine ">"
           SayUntil "</a>"
@@ -336,7 +341,8 @@ if "<th scope=\"row\">작사</th>"
           endif
           # - tidy tag
           # : add space between opening parentheses
-          RegexpReplace "(\w)\(" "$1 (" 1
+          RegexpReplace "(\w{2,})\(" "$1 ("
+          # NOTE require 2+ chars. to avoid 'f(x)' -> 'f (x)'
           RegexpReplace "\" >" "\">" 1
           FindInLine ">"
           SayUntil "</a>"
@@ -396,7 +402,8 @@ if "<th scope=\"row\">편곡</th>"
           endif
           # - tidy tag
           # : add space between opening parentheses
-          RegexpReplace "(\w)\(" "$1 (" 1
+          RegexpReplace "(\w{2,})\(" "$1 ("
+          # NOTE require 2+ chars. to avoid 'f(x)' -> 'f (x)'
           RegexpReplace "\" >" "\">" 1
           FindInLine ">"
           SayUntil "</a>"
