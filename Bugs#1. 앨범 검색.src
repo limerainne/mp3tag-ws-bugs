@@ -19,7 +19,7 @@
 #
 [Name]=Bugs / 앨범명 검색
 [BasedOn]=https://music.bugs.co.kr
-[IndexUrl]=https://m.bugs.co.kr/search/album?q=%s
+[IndexUrl]=https://m.bugs.co.kr/api/getSearchList?type=album&query=%s&page=1&size=50
 [AlbumUrl]=https://music.bugs.co.kr/album/
 [WordSeparator]=+
 [IndexFormat]=%_url%|%_preview%|%앨범%|%아티스트%|%발매일%
@@ -42,56 +42,36 @@ debug "off" "C:\Temp\Bugs\debug_search.htm"
 # The output format is defined by IndexFormat above, which
 # is used by the selection dialog
 # ###################################################################
-do
-    # start of list element
-    FindLine "<li class=\"__mobileAlbumListlist1234\" >"
+# * From Feb, 2020, Bugs mobile website was revised to use AJAX search API!
+json "ON"  # turn on JSON parser
     
-    # album URL, preview URL
-    FindLine "class=\"albumLink\">"
-    FindInLine "<a href=\""
-    SayRegexp "[0-9]+"
+json_foreach "list"
     
-    Say "|"
+  json_select "album_id"
+  sayrest
+  say "|"
     
-    MoveLine -1
-    MoveLine +1
-    FindInLine "<a href=\""
-    # ref: [URL regex] https://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
-    # TODO at the end of regex match, cannot remove default separator ' ' (space)
-    SayRegexp "https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}[a-zA-Z0-9//]*"
+  json_select "album_id"
+  say "https://music.bugs.co.kr/album/"
+  sayrest
+  say "|"
     
-    Say "|"
+  json_select "title"
+  sayrest
+  say "|"
     
-    # album title
-    FindLine "span class=\"albumTitle\">"
-    FindInLine "span class=\"albumTitle\">"
-    SayUntil "</span>"
+  json_select_many "artists" "artist_nm" ", "
+  sayrest
+  say "|"
     
-    Say "|"
+  json_select "release_ymd"
+  RegexpReplace "(\d{4})(\d{2})(\d{2})" "$1.$2.$3"
+  sayrest
     
-    # artist name
-    FindLine "span class=\"artistTitle\">"
-    FindInLine "span class=\"artistTitle\">"
-    SayUntil "</span>"
-    
-    Say "|"
-    
-    # release date
-    FindLine "<time>"
-    FindInLine "<time>"
-    
-    # - get year.month.day
-    # SayUntil "<\time>"
-    
-    # TODO to get 'year' only, use below
-    SayNChars 4
-    
-    SayNewLine
+  saynewline
 
-    FindLine "</li>"
-    MoveLine 1
-    Unspace
-while "<li class=\"__mobileAlbumListlist1234\" >"
+json_foreach_end
+# end of json_foreach "list"  # NOTE DO NOT PLACE COMMENTS WITH THE SAME LINE OF THE COMMAND
 
 [ParserScriptAlbum]=...
 # debug "off" "C:\Temp\Bugs\debug_album.htm"
