@@ -1,6 +1,6 @@
 #
 # * Mp3tag web source for Bugs / Common script for parsing album page
-# v0.4.8 / 200211
+# v0.4.10 / 200903
 # 
 # * Installation
 # - just copy this script to:
@@ -269,7 +269,7 @@ Do
     
     OutputTo "BugsArtistId"
     Replace "\\\\n" "$n$"
-    RegexpReplace ".+?\|\|.+?\|\|(\d+)(\$n\$)?" "$1$2"
+    RegexpReplace ".+?\|\|.+?\|\|(\d+)\|\|OK(\$n\$)?" "$1$2"
     Replace "$n$" ";"
     SayRest
     Say "|"
@@ -280,7 +280,7 @@ Do
 
     OutputTo "tARTIST"
     Replace "\\\\n" "$n$"
-    RegexpReplace ".+?\|\|(.+?)\|\|\d+(\$n\$)?" "$1$2"
+    RegexpReplace ".+?\|\|(.+?)\|\|\d+\|\|OK(\$n\$)?" "$1$2"
     Replace "$n$" ", "
     # add space before opening parenthesis
     RegexpReplace "(\w{2,})\(" "$1 ("
