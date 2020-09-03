@@ -1,6 +1,6 @@
 ﻿#
 # * Mp3tag web source for Bugs / Fetch a synced lyric from found track ID
-# v0.4.9 / 200515
+# v0.4.10 / 200903
 # 
 # * Installation
 # - just copy this script to:
@@ -24,7 +24,7 @@
 # LyricUrl (JSON): https://music.bugs.co.kr/player/lyrics/T/30233396
 
 [ParserScriptAlbum]=...
-debug "off" "C:\Temp\Bugs\debug_album.htm"
+# debug "off" "C:\Temp\Bugs\debug_album.htm"
 # ###################################################################
 # This script parses the albums page for all common information.
 #

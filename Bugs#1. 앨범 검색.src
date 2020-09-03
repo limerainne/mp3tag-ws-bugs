@@ -1,6 +1,6 @@
 ﻿#
 # * Mp3tag web source for Bugs / Search by Album
-# v0.4.8 / 200211
+# v0.4.10 / 200903
 # 
 # * Installation
 # - just copy this script to:
@@ -34,7 +34,7 @@
 # -- note: care for last 2 digit! (200324 -> 200324'45')
 
 [ParserScriptIndex]=...
-debug "off" "C:\Temp\Bugs\debug_search.htm"
+# debug "off" "C:\Temp\Bugs\debug_search.htm"
 # ###################################################################
 # This script parses the webpage for all releases
 # by this albumname.
