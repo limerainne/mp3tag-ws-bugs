@@ -1,6 +1,6 @@
 #
 # * Mp3tag web source for Bugs / Common script for parsing album page
-# v0.4.10 / 200903
+# v0.4.11 / 210627
 # 
 # * Installation
 # - just copy this script to:
@@ -88,8 +88,9 @@ do
     RegexpReplace "(\w{2,})\(" "$1 ("
     # NOTE require 2+ chars. to avoid 'f(x)' -> 'f (x)'
     RegexpReplace "\" >" "\">" 1
-    SayUntilML "</a>"
+    SayRest
 
+    FindLine "</a>"
     MoveLine +2
     Unspace
 while "<a href=\"https://music.bugs.co.kr/"
