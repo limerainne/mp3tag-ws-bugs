@@ -1,6 +1,6 @@
 ﻿#
 # * Mp3tag web source for Bugs / Fetch a synced lyric from found track ID
-# v0.4.10 / 200903
+# v0.4.11 / 210703
 # 
 # * Installation
 # - just copy this script to:
@@ -42,7 +42,6 @@ json_select "userId"
 Say "[by:"
 SayRest
 Say "]"
-SayNewline
 SayNewline
 
 # actual lyrics
