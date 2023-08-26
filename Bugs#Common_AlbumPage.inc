@@ -1,6 +1,6 @@
 #
 # * Mp3tag web source for Bugs / Common script for parsing album page
-# v0.4.11 / 210627
+# v0.4.12 / 230827
 # 
 # * Installation
 # - just copy this script to:
@@ -87,7 +87,7 @@ do
     # add space before opening parenthesis
     RegexpReplace "(\w{2,})\(" "$1 ("
     # NOTE require 2+ chars. to avoid 'f(x)' -> 'f (x)'
-    RegexpReplace "\" >" "\">" 1
+    RegexpReplace "\" >" "\">"
     SayRest
 
     FindLine "</a>"

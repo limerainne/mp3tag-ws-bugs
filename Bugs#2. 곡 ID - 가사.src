@@ -1,6 +1,6 @@
 ﻿#
 # * Mp3tag web source for Bugs / Fetch a lyric from found track ID
-# v0.4.10 / 200903
+# v0.4.12 / 230827
 # 
 # * Installation
 # - just copy this script to:
@@ -81,7 +81,7 @@ FindLine "music.bugs.co.kr/artist/"
 # # : add space between opening parentheses
 # RegexpReplace "(\w{2,})\(" "$1 ("
 # # NOTE require 2+ chars. to avoid 'f(x)' -> 'f (x)'
-# RegexpReplace "\" >" "\">" 1
+# RegexpReplace "\" >" "\">"
 # 
 # SayUntil "</a>"
 
@@ -111,7 +111,7 @@ FindLine "music.bugs.co.kr/album/"
 # RegexpReplace "(\w{2,})\(" "$1 ("
 # # NOTE require 2+ chars. to avoid 'f(x)' -> 'f (x)'
 # # : ...?
-# RegexpReplace "\" >" "\">" 1
+# RegexpReplace "\" >" "\">"
 # FindInLine "\">"
 # SayUntil "</a>"
 
@@ -160,7 +160,7 @@ if "<th scope=\"row\">보컬</th>"
           # : add space between opening parentheses
           RegexpReplace "(\w{2,})\(" "$1 ("
           # NOTE require 2+ chars. to avoid 'f(x)' -> 'f (x)'
-          RegexpReplace "\" >" "\">" 1
+          RegexpReplace "\" >" "\">"
           FindInLine ">"
           SayUntil "</a>"
         else
@@ -222,7 +222,7 @@ if "<th scope=\"row\">피쳐링</th>"
           # : add space between opening parentheses
           RegexpReplace "(\w{2,})\(" "$1 ("
           # NOTE require 2+ chars. to avoid 'f(x)' -> 'f (x)'
-          RegexpReplace "\" >" "\">" 1
+          RegexpReplace "\" >" "\">"
           FindInLine ">"
           SayUntil "</a>"
         else
@@ -282,7 +282,7 @@ if "<th scope=\"row\">작곡</th>"
           # : add space between opening parentheses
           RegexpReplace "(\w{2,})\(" "$1 ("
           # NOTE require 2+ chars. to avoid 'f(x)' -> 'f (x)'
-          RegexpReplace "\" >" "\">" 1
+          RegexpReplace "\" >" "\">"
           FindInLine ">"
           SayUntil "</a>"
         
@@ -343,7 +343,7 @@ if "<th scope=\"row\">작사</th>"
           # : add space between opening parentheses
           RegexpReplace "(\w{2,})\(" "$1 ("
           # NOTE require 2+ chars. to avoid 'f(x)' -> 'f (x)'
-          RegexpReplace "\" >" "\">" 1
+          RegexpReplace "\" >" "\">"
           FindInLine ">"
           SayUntil "</a>"
         
@@ -404,7 +404,7 @@ if "<th scope=\"row\">편곡</th>"
           # : add space between opening parentheses
           RegexpReplace "(\w{2,})\(" "$1 ("
           # NOTE require 2+ chars. to avoid 'f(x)' -> 'f (x)'
-          RegexpReplace "\" >" "\">" 1
+          RegexpReplace "\" >" "\">"
           FindInLine ">"
           SayUntil "</a>"
         
