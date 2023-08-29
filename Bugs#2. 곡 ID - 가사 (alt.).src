@@ -1,0 +1,52 @@
+﻿#
+# * Mp3tag web source for Bugs / Fetch a unsynced lyric ONLY from found track ID
+# v0.4.12 / 230830
+# 
+# * Installation
+# - just copy this script to:
+# %appdata%\Mp3tag\data\sources\
+# - NOTE '#' in filename makes submenu!
+#
+[Name]=Bugs / 곡 ID - 가사 (alt.)
+[BasedOn]=https://music.bugs.co.kr
+[AlbumUrl]=https://music.bugs.co.kr/player/lyrics/N/
+[WordSeparator]=+
+[SearchBy]=Bugs 곡 ID||%BugsTrackId%||%s
+[Encoding]=utf-8
+
+# UserAgent
+# ref: https://community.mp3tag.de/t/cant-get-full-browser-html-source-for-imdb-titles/41140/4
+# default: "Mozilla/5.0 (compatible)", if enabled below: "Mp3tag/<version>"
+# [UserAgent]=1
+
+# ### Lyric API (from web player) URL example ###
+# "Dear You" by Lovelyz
+# LyricUrl (JSON): https://music.bugs.co.kr/player/lyrics/N/30233396
+
+[ParserScriptAlbum]=...
+# debug "off" "C:\Temp\Bugs\debug_album.htm"
+# ###################################################################
+# This script parses the albums page for all common information.
+#
+# The current output variable is set via the outputto command
+# All these fields are used by the confirm online information dialog
+# ###################################################################
+json "ON"
+
+# actual lyrics
+outputto "UNSYNCEDLYRICS"
+json_select "lyrics"
+
+# NOTE original UNSYNCED lyrics format
+# e.g. "아직 열어보지 말아요 \r\n호기심이 생겨도\r\n떨어트리지도 말아요 \r\n..." (30233396)
+
+## dump string to tag
+SayRest
+SayNewline
+
+# created by
+outputto "UNSYNCEDLYRICS"
+json_select "userId"
+Say "* 등록: "
+SayRest
+SayNewline

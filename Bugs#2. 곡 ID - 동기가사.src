@@ -1,6 +1,6 @@
 ﻿#
 # * Mp3tag web source for Bugs / Fetch a synced lyric from found track ID
-# v0.4.11 / 210703
+# v0.4.12 / 230830
 # 
 # * Installation
 # - just copy this script to:
@@ -11,10 +11,10 @@
 [BasedOn]=https://music.bugs.co.kr
 [AlbumUrl]=https://music.bugs.co.kr/player/lyrics/T/
 [WordSeparator]=+
-[SearchBy]=%BugsTrackId%
+[SearchBy]=Bugs 곡 ID||%BugsTrackId%||%s
 [Encoding]=utf-8
 
-# TODO UserAgent
+# UserAgent
 # ref: https://community.mp3tag.de/t/cant-get-full-browser-html-source-for-imdb-titles/41140/4
 # default: "Mozilla/5.0 (compatible)", if enabled below: "Mp3tag/<version>"
 # [UserAgent]=1
@@ -59,7 +59,7 @@ RegexpReplace "(\.\d)\|" "\10|"        # "ss.x" --> "ss.x0"
 
 #### for oldies (see e.g.2)
 RegexpReplace "0(\d{2})\|" "\1|"       # "0ss" --> "ss"
-RegexpReplace "^(\d{2})\|" "\1.00]"     # "^ss|" --> "ss.00|"
+RegexpReplace "(\d{2})\|" "\1.00]"     # "ss|" --> "ss.00|"
 
 RegexpReplace "\|" "]"                 # closing bracket
 

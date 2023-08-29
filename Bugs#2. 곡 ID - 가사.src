@@ -11,7 +11,7 @@
 [BasedOn]=https://music.bugs.co.kr
 [AlbumUrl]=https://music.bugs.co.kr/track/
 [WordSeparator]=+
-[SearchBy]=%BugsTrackId%
+[SearchBy]=Bugs 곡 ID||%BugsTrackId%||%s
 [Encoding]=utf-8
 
 # TODO UserAgent
