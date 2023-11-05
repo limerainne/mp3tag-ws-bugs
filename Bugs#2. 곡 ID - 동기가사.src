@@ -24,7 +24,8 @@
 # LyricUrl (JSON): https://music.bugs.co.kr/player/lyrics/T/30233396
 
 [ParserScriptAlbum]=...
-# debug "off" "C:\Temp\Bugs\debug_album.htm"
+# debug "off" "C:\Temp\Bugs\debug_lyrics.htm"
+# DebugWriteInput "C:\Temp\Bugs\debug-input.out"
 # ###################################################################
 # This script parses the albums page for all common information.
 #
@@ -52,117 +53,36 @@ json_select "lyrics"
 # e.g. "23.3|네가 좋아 쉽게 말해도＃27.2|지금 내 맘조차 가볍단 건 아니야＃..." (31333108: 찾아가세요 / 러블리즈)
 # e.g.2. "014|또 하루 멀어져간다＃022|내뿜은 담배 연기처럼＃030|작기만한 내 기억속에..." (38725: 서른 즈음에 / 김광석)
 
-## brute-force conversion to LRC format
-### time brackets [mm:ss.xx], delimiter to newline character
-RegexpReplace "＃" "\r\n"              # delimiter -> newline (CR+LF)
+# cleanup for conversion to LRC format
 RegexpReplace "(\.\d)\|" "\10|"        # "ss.x" --> "ss.x0"
 
-#### for oldies (see e.g.2)
+## for oldies (see e.g.2)
+RegexpReplace "(\d{3})\|" "\1.00|"     # "sss|" --> "ss.00|"
 RegexpReplace "0(\d{2})\|" "\1|"       # "0ss" --> "ss"
-RegexpReplace "(\d{2})\|" "\1.00]"     # "ss|" --> "ss.00|"
 
-RegexpReplace "\|" "]"                 # closing bracket
+# TODO to retain 'ms' numbers from `SayDuration`, which ignores numbers under a decimal point ... [1]
+RegexpReplace "\.(\d{2})\|" "_\1|"     # ".ms|" --> "_ms|"
 
-### #s? to mm:s?
-# 0-9s
-RegexpReplace "^(\d\.)" "00:0\1"
-# 10-59s
-RegexpReplace "^([1-5]\d\.)" "00:\1"
+# closing bracket of timestamp
+RegexpReplace "\|" "]"                 # bar to closing bracket
+# NOTE opening bracket is printed in the loop
 
-# 1m0s - 15m9s
-# TODO Mp3tag tag source script does not support arithmetic computations, loop statements...
-# ( OK, I know. I also ashamed of myself ;-) )
-# TODO ignore tracks with its length longer than 15m9s
-RegexpReplace "^6(\d\.)" "01:0\1"
-RegexpReplace "^7(\d\.)" "01:1\1"
-RegexpReplace "^8(\d\.)" "01:2\1"
-RegexpReplace "^9(\d\.)" "01:3\1"
-RegexpReplace "^10(\d\.)" "01:4\1"
-RegexpReplace "^11(\d\.)" "01:5\1"
-RegexpReplace "^12(\d\.)" "02:0\1"
-RegexpReplace "^13(\d\.)" "02:1\1"
-RegexpReplace "^14(\d\.)" "02:2\1"
-RegexpReplace "^15(\d\.)" "02:3\1"
-RegexpReplace "^16(\d\.)" "02:4\1"
-RegexpReplace "^17(\d\.)" "02:5\1"
-RegexpReplace "^18(\d\.)" "03:0\1"
-RegexpReplace "^19(\d\.)" "03:1\1"
-RegexpReplace "^20(\d\.)" "03:2\1"
-RegexpReplace "^21(\d\.)" "03:3\1"
-RegexpReplace "^22(\d\.)" "03:4\1"
-RegexpReplace "^23(\d\.)" "03:5\1"
-RegexpReplace "^24(\d\.)" "04:0\1"
-RegexpReplace "^25(\d\.)" "04:1\1"
-RegexpReplace "^26(\d\.)" "04:2\1"
-RegexpReplace "^27(\d\.)" "04:3\1"
-RegexpReplace "^28(\d\.)" "04:4\1"
-RegexpReplace "^29(\d\.)" "04:5\1"
-RegexpReplace "^30(\d\.)" "05:0\1"
-RegexpReplace "^31(\d\.)" "05:1\1"
-RegexpReplace "^32(\d\.)" "05:2\1"
-RegexpReplace "^33(\d\.)" "05:3\1"
-RegexpReplace "^34(\d\.)" "05:4\1"
-RegexpReplace "^35(\d\.)" "05:5\1"
-RegexpReplace "^36(\d\.)" "06:0\1"
-RegexpReplace "^37(\d\.)" "06:1\1"
-RegexpReplace "^38(\d\.)" "06:2\1"
-RegexpReplace "^39(\d\.)" "06:3\1"
-RegexpReplace "^40(\d\.)" "06:4\1"
-RegexpReplace "^41(\d\.)" "06:5\1"
-RegexpReplace "^42(\d\.)" "07:0\1"
-RegexpReplace "^43(\d\.)" "07:1\1"
-RegexpReplace "^44(\d\.)" "07:2\1"
-RegexpReplace "^45(\d\.)" "07:3\1"
-RegexpReplace "^46(\d\.)" "07:4\1"
-RegexpReplace "^47(\d\.)" "07:5\1"
-RegexpReplace "^48(\d\.)" "08:0\1"
-RegexpReplace "^49(\d\.)" "08:1\1"
-RegexpReplace "^50(\d\.)" "08:2\1"
-RegexpReplace "^51(\d\.)" "08:3\1"
-RegexpReplace "^52(\d\.)" "08:4\1"
-RegexpReplace "^53(\d\.)" "08:5\1"
-RegexpReplace "^54(\d\.)" "09:0\1"
-RegexpReplace "^55(\d\.)" "09:1\1"
-RegexpReplace "^56(\d\.)" "09:2\1"
-RegexpReplace "^57(\d\.)" "09:3\1"
-RegexpReplace "^58(\d\.)" "09:4\1"
-RegexpReplace "^59(\d\.)" "09:5\1"
-RegexpReplace "^60(\d\.)" "10:0\1"
-RegexpReplace "^61(\d\.)" "10:1\1"
-RegexpReplace "^62(\d\.)" "10:2\1"
-RegexpReplace "^63(\d\.)" "10:3\1"
-RegexpReplace "^64(\d\.)" "10:4\1"
-RegexpReplace "^65(\d\.)" "10:5\1"
-RegexpReplace "^66(\d\.)" "11:0\1"
-RegexpReplace "^67(\d\.)" "11:1\1"
-RegexpReplace "^68(\d\.)" "11:2\1"
-RegexpReplace "^69(\d\.)" "11:3\1"
-RegexpReplace "^70(\d\.)" "11:4\1"
-RegexpReplace "^71(\d\.)" "11:5\1"
-RegexpReplace "^72(\d\.)" "12:0\1"
-RegexpReplace "^73(\d\.)" "12:1\1"
-RegexpReplace "^74(\d\.)" "12:2\1"
-RegexpReplace "^75(\d\.)" "12:3\1"
-RegexpReplace "^76(\d\.)" "12:4\1"
-RegexpReplace "^77(\d\.)" "12:5\1"
-RegexpReplace "^78(\d\.)" "13:0\1"
-RegexpReplace "^79(\d\.)" "13:1\1"
-RegexpReplace "^80(\d\.)" "13:2\1"
-RegexpReplace "^81(\d\.)" "13:3\1"
-RegexpReplace "^82(\d\.)" "13:4\1"
-RegexpReplace "^83(\d\.)" "13:5\1"
-RegexpReplace "^84(\d\.)" "14:0\1"
-RegexpReplace "^85(\d\.)" "14:1\1"
-RegexpReplace "^86(\d\.)" "14:2\1"
-RegexpReplace "^87(\d\.)" "14:3\1"
-RegexpReplace "^88(\d\.)" "14:4\1"
-RegexpReplace "^89(\d\.)" "14:5\1"
-RegexpReplace "^90(\d\.)" "15:0\1"
+# TODO place an meaningless opening bracket, which solves(?) omitted first (10th second) time number
+RegexpReplace "^" "["
 
 
-### place an opening bracket for each line
-RegexpReplace "^" "["          # place an opening bracket at the begining of the first line
+Do
+  SkipChars "＃"
 
-## dump string to tag
-SayRest
-SayNewline
+  Say "["
+
+  SayDuration "s" 0 0
+
+  # HARDCODED '_' to '.' ... [1]
+  MoveChar 1
+  Say "."
+
+  ## dump remaining line to tag
+  SayUntil "＃"
+  SayNewline
+While "＃"
