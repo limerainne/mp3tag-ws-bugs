@@ -100,25 +100,12 @@ else
     SayRest
 endif
 
-# album type*
-FindLine "앨범 종류"
+# album type* ~ renamed in around 24/01/11
+FindLine "유형"
 MoveLine +1
 OutputTo "ALBUMTYPE"
 FindInLine "<td>"
 SayUntil "</td>"
-
-# released date*
-FindLine "발매일"
-MoveLine +2
-OutputTo "YEAR"
-FindInLine "<time datetime=\""
-FindInLine ">"
-
-# - get year.month.day
-SayUntil "<"
-
-# TODO to get 'year' only, use below
-# SayNChars 4
 
 # genre** -- multiline
 FindLine "장르"
@@ -158,24 +145,24 @@ if "\">"
   while "\">"
 endif
 
-# publisher*
-FindLine "기획사" 1 1
-Unspace
-if "<th scope="row">기획사</th>"
-  MoveLine +1
-  OutputTo "PUBLISHER"
-  FindInLine "<td>"
-  SayUntil "</td>"
-else
-  GotoLine 1
-endif
-
 # distributer*
 FindLine "유통사" 1 1
 Unspace
 if "<th scope="row">유통사</th>"
   MoveLine +1
   OutputTo "DISTRIBUTER"
+  FindInLine "<td>"
+  SayUntil "</td>"
+else
+  GotoLine 1
+endif
+
+# publisher*
+FindLine "기획사" 1 1
+Unspace
+if "<th scope="row">기획사</th>"
+  MoveLine +1
+  OutputTo "PUBLISHER"
   FindInLine "<td>"
   SayUntil "</td>"
 else
