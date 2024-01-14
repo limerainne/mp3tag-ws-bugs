@@ -145,6 +145,19 @@ if "\">"
   while "\">"
 endif
 
+# released date*
+FindLine "발매일"
+MoveLine +2
+OutputTo "YEAR"
+FindInLine "<time datetime=\""
+FindInLine ">"
+
+# - get year.month.day
+SayUntil "<"
+
+# TODO to get 'year' only, use below
+# SayNChars 4
+
 # distributer*
 FindLine "유통사" 1 1
 Unspace
