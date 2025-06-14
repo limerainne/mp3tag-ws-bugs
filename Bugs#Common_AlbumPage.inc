@@ -244,7 +244,7 @@ Do
   # track number
   FindLine "<p class=\"trackIndex\">"
   MoveLine +1
-  OutputTo "tTrack"
+  OutputTo "ttrack"
   FindInLine "<em>"
   SayUntil "</em>"
   Say "|"
