@@ -57,8 +57,8 @@ json_select "lyrics"
 RegexpReplace "(\.\d)\|" "\10|"        # "ss.x" --> "ss.x0"
 
 ## for oldies (see e.g.2)
-RegexpReplace "(\d{3})\|" "\1.00|"     # "sss|" --> "ss.00|"
-RegexpReplace "0(\d{2})\|" "\1|"       # "0ss" --> "ss"
+RegexpReplace "0(\d{2})\|" "\1|"       # "0ss|" --> "ss|"
+RegexpReplace "(\d{2})\|" "\1.00|"     # "ss|" --> "ss.00|"
 
 # TODO to retain 'ms' numbers from `SayDuration`, which ignores numbers under a decimal point ... [1]
 RegexpReplace "\.(\d{2})\|" "_\1|"     # ".ms|" --> "_ms|"
