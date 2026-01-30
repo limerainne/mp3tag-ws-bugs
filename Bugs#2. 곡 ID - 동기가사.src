@@ -52,15 +52,16 @@ json_select "lyrics"
 # NOTE original lyrics format
 # e.g. "23.3|네가 좋아 쉽게 말해도＃27.2|지금 내 맘조차 가볍단 건 아니야＃..." (31333108: 찾아가세요 / 러블리즈)
 # e.g.2. "014|또 하루 멀어져간다＃022|내뿜은 담배 연기처럼＃030|작기만한 내 기억속에..." (38725: 서른 즈음에 / 김광석)
+# e.g.3. "2|웃지 못할사건 또 잊지못할...(omitted)... 서리＃12|아 근데 남자들도 만만치가 않아＃15|어느날 우연히..."
 
 # cleanup for conversion to LRC format
 RegexpReplace "(\.\d)\|" "\10|"        # "ss.x" --> "ss.x0"
 
-## for oldies (see e.g.2)
+## for oldies (see e.g.2, e.g.3)
 RegexpReplace "0(\d{2})\|" "\1|"       # "0ss|" --> "ss|"
-RegexpReplace "(\d{2})\|" "\1.00|"     # "ss|" --> "ss.00|"
+RegexpReplace "(\d)\|" "\1.00|"        # "s|" --> "s.00|"
 
-# TODO to retain 'ms' numbers from `SayDuration`, which ignores numbers under a decimal point ... [1]
+# preserve 'ms' numbers from `SayDuration`, which ignores numbers under a decimal point ... [1]
 RegexpReplace "\.(\d{2})\|" "_\1|"     # ".ms|" --> "_ms|"
 
 # closing bracket of timestamp
@@ -78,7 +79,7 @@ Do
 
   SayDuration "s" 0 0
 
-  # HARDCODED '_' to '.' ... [1]
+  # HARDCODED return '_' to '.' ... [1]
   MoveChar 1
   Say "."
 
